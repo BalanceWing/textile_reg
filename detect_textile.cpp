@@ -277,7 +277,7 @@ void RTSP_Stream::Init() {
 void RTSP_Stream::GetConfig() {
 
   //std::ifstream infile("/etc/textile.conf");
-  std::ifstream cfgfile("/home/orange/config/textile.conf");
+  std::ifstream cfgfile("~/config/textile.conf");
   std::string rtsp_url = "rtsp://";
   std::string item;
 
@@ -362,7 +362,7 @@ string list_file ;
 
 void getAlgConf ()
 {
-  std::ifstream cfgfile("/home/orange/config/algconf.conf");
+  std::ifstream cfgfile("~/config/algconf.conf");
 
   string confidence_threshold ;
   //string file_type ;
@@ -374,7 +374,8 @@ void getAlgConf ()
   string prefix_str;
   int split_pos = 0;
 
-  while ( !getline(cfgfile, item).eof()) {
+//  while ( !getline(cfgfile, item).eof()) 
+  	{
 
     split_pos = item.find('=');
     prefix_str = item.substr(0, split_pos);
@@ -403,8 +404,11 @@ void getAlgConf ()
     else if (prefix_str.compare("listfile") == 0){
       list_file = item.substr(split_pos + 1, -1);
       list_file = trim (list_file);
+      cout << list_file <<std::endl;
     }
   }
+  
+
   
 }
 //arg of thread 
@@ -439,7 +443,7 @@ void createThread() {
     pthread_create(&pid, NULL, &threadFunc, NULL);
 }
 
-
+//argument: model_+file weights_file list_file 
 int main(int argc, char** argv) {
   ::google::InitGoogleLogging(argv[0]);
   // Print output to stderr (while still logging)
@@ -455,9 +459,12 @@ int main(int argc, char** argv) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
 
   getAlgConf ();
+  cout <<"file type: " << file_type << std::endl;
+  cout <<"model_file: " << model_file << std::endl;
+  cout <<"weights_file: " << weights_file << std::endl;
 
   if (argc < 4) {
-    //gflags::ShowUsageWithFlagsRestrict(argv[0], "examples/ssd/ssd_detect");
+    gflags::ShowUsageWithFlagsRestrict(argv[0], "examples/ssd/detect_textile");
     //return 1;
   }
 
@@ -490,7 +497,7 @@ int main(int argc, char** argv) {
   std::ifstream infile (list_file.c_str());
   std::string file;
   while (infile >> file) {
-    //out <<"Debug: file :" <<file << std::endl;
+    //cout <<"Debug: file :" <<file << std::endl;
     out <<"file type: " << file_type << std::endl;
 
     //std::string prefix_str = file.substr(0, file.find(':'));
