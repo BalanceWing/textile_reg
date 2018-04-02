@@ -277,7 +277,7 @@ void RTSP_Stream::Init() {
 void RTSP_Stream::GetConfig() {
 
   //std::ifstream infile("/etc/textile.conf");
-  std::ifstream cfgfile("~/config/textile.conf");
+  std::ifstream cfgfile("/home/ubuntu/config/textile.conf");
   std::string rtsp_url = "rtsp://";
   std::string item;
 
@@ -362,7 +362,7 @@ string list_file ;
 
 void getAlgConf ()
 {
-  std::ifstream cfgfile("~/config/algconf.conf");
+  std::ifstream cfgfile("/home/ubuntu/config/algconf.conf");
 
   string confidence_threshold ;
   //string file_type ;
@@ -373,10 +373,11 @@ void getAlgConf ()
   string item ;
   string prefix_str;
   int split_pos = 0;
+  int item_count = 0;
 
-//  while ( !getline(cfgfile, item).eof()) 
-  	{
-
+  while ( !getline(cfgfile, item).eof()) 
+  {
+    cout << prefix_str <<std::endl;
     split_pos = item.find('=');
     prefix_str = item.substr(0, split_pos);
     prefix_str = trim (prefix_str);
@@ -405,6 +406,10 @@ void getAlgConf ()
       list_file = item.substr(split_pos + 1, -1);
       list_file = trim (list_file);
       cout << list_file <<std::endl;
+    }
+    if (item_count++ > 6)
+    {
+        break;
     }
   }
   
@@ -479,6 +484,8 @@ int main(int argc, char** argv) {
 
   // Initialize the network.
   Detector detector(model_file, weights_file, mean_file, mean_value);
+
+  cout << "Initialize the network completed. ..." << std::endl;
 
   // Set the output mode.
   std::streambuf* buf = std::cout.rdbuf();
